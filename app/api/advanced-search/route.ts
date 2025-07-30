@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import Exa from 'exa-js'
 
 import { Redis } from '@upstash/redis'
+import Exa from 'exa-js'
 import { createClient } from 'redis'
 
 import {

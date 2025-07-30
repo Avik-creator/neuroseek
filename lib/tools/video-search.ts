@@ -1,5 +1,6 @@
 import { tool } from 'ai'
 import Exa from 'exa-js';
+
 import { getSearchSchemaForModel } from '@/lib/schema/search'
 
 interface VideoResult {
