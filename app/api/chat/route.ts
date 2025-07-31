@@ -22,7 +22,6 @@ export async function POST(req: Request) {
     const { messages, id: chatId } = await req.json()
     const referer = req.headers.get('referer')
     const isSharePage = referer?.includes('/share/')
-    let userId = await getCurrentUserId()
 
     if (isSharePage) {
       return new Response('Chat API is not available on share pages', {
@@ -30,28 +29,11 @@ export async function POST(req: Request) {
         statusText: 'Forbidden'
       })
     }
+    const userId = await getCurrentUserId()
 
-    // Handle guest mode
-    if (!userId) {
-      const { canSendGuestMessage, incrementGuestMessageCount, getRemainingGuestMessages } = await import('@/lib/guest/guest-mode')
-      
-      if (!(await canSendGuestMessage())) {
-        return new Response('Guest message limit reached. Please sign in to continue chatting.', {
-          status: 429,
-          statusText: 'Too Many Requests'
-        })
-      }
-      
-      await incrementGuestMessageCount()
-      const remaining = await getRemainingGuestMessages()
-      
-      // Add remaining count to response headers
-      const headers = new Headers()
-      headers.set('X-Remaining-Guest-Messages', remaining.toString())
-      
-      // Continue with guest access
-      userId = 'guest'
-    }
+
+
+    
 
     const cookieStore = await cookies()
     const modelJson = cookieStore.get('selectedModel')?.value

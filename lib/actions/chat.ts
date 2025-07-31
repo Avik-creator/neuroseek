@@ -119,7 +119,7 @@ export async function getChatsPage(
   }
 }
 
-export async function getChat(id: string, userId: string) {
+export async function getChat(id: string, userId?: string | null) {
   const redis = await getRedis()
   const chat = await redis.hgetall<Chat>(`chat:${id}`)
 
@@ -202,7 +202,7 @@ export async function deleteChat(
   }
 }
 
-export async function saveChat(chat: Chat, userId: string) {
+export async function saveChat(chat: Chat, userId?: string | null) {
   try {
     const redis = await getRedis()
     const pipeline = redis.pipeline()
@@ -213,7 +213,11 @@ export async function saveChat(chat: Chat, userId: string) {
     }
 
     pipeline.hmset(`chat:${chat.id}`, chatToSave)
-    pipeline.zadd(getUserChatKey(userId), Date.now(), `chat:${chat.id}`)
+    
+    // Only add to user's chat history if userId is provided
+    if (userId) {
+      pipeline.zadd(getUserChatKey(userId), Date.now(), `chat:${chat.id}`)
+    }
 
     const results = await pipeline.exec()
 

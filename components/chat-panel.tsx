@@ -126,20 +126,7 @@ export function ChatPanel({
           <p className="text-center text-3xl font-semibold">
             How can I help you today?
           </p>
-          {!user && (
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-2">
-                🎉 Guest Mode: Try 3 free messages
-              </p>
-              <Button
-                onClick={() => router.push('/auth/login')}
-                variant="outline"
-                size="sm"
-              >
-                Sign in for unlimited access
-              </Button>
-            </div>
-          )}
+          {/* Removed guest mode limitations - full access for everyone */}
         </div>
       )}
       {user || true ? (

@@ -40,25 +40,9 @@ export async function updateSession(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser()
 
-  // Define public paths that don't require authentication
-  const publicPaths = [
-    '/', // Root path - allow viewing but chat requires auth
-    '/auth', // Auth-related pages
-    '/share', // Share pages
-    '/api/chat', // Allow guest access to chat API
-    '/search', // Allow guest access to search
-    // Add other public paths here if needed
-  ]
-
-  const pathname = request.nextUrl.pathname
-
-  // Redirect to login if the user is not authenticated and the path is not public
-  if (!user && !publicPaths.some(path => pathname.startsWith(path))) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth/login'
-    return NextResponse.redirect(url)
-  }
+  // Allow all paths - no authentication required
+  // Users can access the entire app without signing up
+  // Authentication is completely optional
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:

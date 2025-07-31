@@ -21,11 +21,9 @@ export async function GET(request: NextRequest) {
 
   const userId = await getCurrentUserId()
 
+  // For guest users, return empty chat history instead of error
   if (!userId) {
-    return NextResponse.json<ChatPageResponse>(
-      { chats: [], nextOffset: null },
-      { status: 401 }
-    )
+    return NextResponse.json<ChatPageResponse>({ chats: [], nextOffset: null })
   }
 
   try {

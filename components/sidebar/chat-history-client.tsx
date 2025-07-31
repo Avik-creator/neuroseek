@@ -37,10 +37,11 @@ export function ChatHistoryClient({ user }: ChatHistoryClientProps) {
   const [isPending, startTransition] = useTransition()
 
   const fetchInitialChats = useCallback(async () => {
-    if (!user) {
-      setIsLoading(false)
-      return
-    }
+    // Allow chat history access without authentication 
+    // if (!user) {
+    //   setIsLoading(false)
+    //   return
+    // }
     
     setIsLoading(true)
     try {
@@ -125,32 +126,33 @@ export function ChatHistoryClient({ user }: ChatHistoryClientProps) {
 
   const isHistoryEmpty = !isLoading && !chats.length && nextOffset === null
 
-  if (!user) {
-    return (
-      <div className="flex flex-col flex-1 h-full">
-        <SidebarGroup>
-          <div className="flex items-center justify-between w-full">
-            <SidebarGroupLabel className="p-0">History</SidebarGroupLabel>
-          </div>
-        </SidebarGroup>
-        <div className="flex-1 overflow-y-auto mb-2 relative px-2 py-4">
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground mb-3">
-              Sign in to view your chat history
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push('/auth/login')}
-              className="w-full"
-            >
-              Sign In
-            </Button>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // Allow chat history access without authentication
+  // if (!user) {
+  //   return (
+  //     <div className="flex flex-col flex-1 h-full">
+  //       <SidebarGroup>
+  //         <div className="flex items-center justify-between w-full">
+  //           <SidebarGroupLabel className="p-0">History</SidebarGroupLabel>
+  //         </div>
+  //       </SidebarGroup>
+  //       <div className="flex-1 overflow-y-auto mb-2 relative px-2 py-4">
+  //         <div className="text-center">
+  //           <p className="text-sm text-muted-foreground mb-3">
+  //             Sign in to view your chat history
+  //           </p>
+  //           <Button
+  //             variant="outline"
+  //             size="sm"
+  //             onClick={() => router.push('/auth/login')}
+  //             className="w-full"
+  //           >
+  //             Sign In
+  //           </Button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div className="flex flex-col flex-1 h-full">

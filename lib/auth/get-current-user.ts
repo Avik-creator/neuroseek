@@ -15,5 +15,5 @@ export async function getCurrentUser() {
 
 export async function getCurrentUserId() {
   const user = await getCurrentUser()
-  return user?.id ?? null
+  return user?.id ?? 'anonymous'
 }

@@ -15,7 +15,7 @@ export async function generateMetadata(props: {
 }) {
   const { id } = await props.params
   const userId = await getCurrentUserId()
-  const chat = userId ? await getChat(id, userId) : null
+  const chat = await getChat(id, userId) // Allow metadata generation without authentication
 
   let metadata: {
     title: string
@@ -63,9 +63,10 @@ export default async function SearchPage(props: {
   const user = await getCurrentUser()
   const { id } = await props.params
 
-  if (!userId) {
-    redirect('/auth/login')
-  }
+  // Allow access without authentication
+  // if (!userId) {
+  //   redirect('/auth/login')
+  // }
 
   const chat = await getChat(id, userId)
   // convertToUIMessages for useChat hook
@@ -75,9 +76,10 @@ export default async function SearchPage(props: {
     redirect('/')
   }
 
-  if (chat?.userId !== userId) {
-    notFound()
-  }
+  // Allow access to chats without user ownership check
+  // if (chat?.userId !== userId) {
+  //   notFound()
+  // }
 
   const models = await getModels()
   return <Chat id={id} savedMessages={messages} models={models} user={user} />
