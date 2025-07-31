@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import Textarea from 'react-textarea-autosize'
 import { useRouter } from 'next/navigation'
 
+import { User } from '@supabase/supabase-js'
 import { Message } from 'ai'
 import { ArrowUp, ChevronDown, MessageCirclePlus, Square } from 'lucide-react'
-import { User } from '@supabase/supabase-js'
 
 import { Model } from '@/lib/types/models'
 import { cn } from '@/lib/utils'
