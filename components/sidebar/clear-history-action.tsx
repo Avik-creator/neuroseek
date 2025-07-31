@@ -6,6 +6,7 @@ import { MoreHorizontal, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { clearChats } from '@/lib/actions/chat'
+
 import { useCurrentUserId } from '@/hooks/use-current-user-id'
 
 import {

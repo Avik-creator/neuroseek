@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
+
+import { createClient } from '@/lib/supabase/client'
 
 export const useCurrentUserId = () => {
   const [userId, setUserId] = useState<string | null>(null)
