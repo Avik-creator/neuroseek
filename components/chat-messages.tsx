@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { Spinner } from './ui/spinner'
 import { RenderMessage } from './render-message'
 import { ToolSection } from './tool-section'
+import { GuestMessageCounter } from './guest-message-counter'
 
 // Import section structure interface
 interface ChatSection {
@@ -31,6 +32,7 @@ interface ChatMessagesProps {
     messageId: string,
     options?: ChatRequestOptions
   ) => Promise<string | null | undefined>
+  user?: any
 }
 
 export function ChatMessages({
@@ -42,7 +44,8 @@ export function ChatMessages({
   addToolResult,
   scrollContainerRef,
   onUpdateMessage,
-  reload
+  reload,
+  user
 }: ChatMessagesProps) {
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({})
   const manualToolCallId = 'manual-tool-call'
@@ -129,6 +132,10 @@ export function ChatMessages({
       )}
     >
       <div className="relative mx-auto w-full max-w-3xl px-4">
+        <GuestMessageCounter 
+          user={user} 
+          messages={sections.flatMap(s => [s.userMessage, ...s.assistantMessages])} 
+        />
         {sections.map((section, sectionIndex) => (
           <div
             key={section.id}

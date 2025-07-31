@@ -223,6 +223,7 @@ export function Chat({
         scrollContainerRef={scrollContainerRef}
         onUpdateMessage={handleUpdateAndReloadMessage}
         reload={handleReloadFrom}
+        user={user}
       />
       <ChatPanel
         input={input}

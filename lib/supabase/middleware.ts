@@ -45,6 +45,8 @@ export async function updateSession(request: NextRequest) {
     '/', // Root path - allow viewing but chat requires auth
     '/auth', // Auth-related pages
     '/share', // Share pages
+    '/api/chat', // Allow guest access to chat API
+    '/search', // Allow guest access to search
     // Add other public paths here if needed
   ]
 

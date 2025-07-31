@@ -126,9 +126,23 @@ export function ChatPanel({
           <p className="text-center text-3xl font-semibold">
             How can I help you today?
           </p>
+          {!user && (
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground mb-2">
+                🎉 Guest Mode: Try 3 free messages
+              </p>
+              <Button
+                onClick={() => router.push('/auth/login')}
+                variant="outline"
+                size="sm"
+              >
+                Sign in for unlimited access
+              </Button>
+            </div>
+          )}
         </div>
       )}
-      {user ? (
+      {user || true ? (
         <form
           onSubmit={handleSubmit}
           className={cn('max-w-3xl w-full mx-auto relative')}
@@ -232,24 +246,7 @@ export function ChatPanel({
             />
           )}
         </form>
-      ) : (
-        <div className={cn('max-w-3xl w-full mx-auto relative')}>
-          <div className="relative flex flex-col w-full gap-2 bg-muted rounded-3xl border border-input">
-            <div className="p-6 text-center">
-              <h3 className="text-lg font-semibold mb-2">Login Required</h3>
-              <p className="text-muted-foreground mb-4">
-                Please sign in to start chatting with AI
-              </p>
-              <Button
-                onClick={() => router.push('/auth/login')}
-                className="w-full"
-              >
-                Sign In
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      ) : null}
     </div>
   )
 }
