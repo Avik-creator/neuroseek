@@ -22,6 +22,16 @@ import {
 } from './ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
+const DEFAULT_MODEL: Model = {
+  id: 'gemini-2.0-flash',
+  name: 'Gemini 2.0 Flash',
+  provider: 'Google Generative AI',
+  providerId: 'google',
+  enabled: true,
+  toolCallType: 'manual'
+}
+
+
 function groupModelsByProvider(models: Model[]) {
   return models
     .filter(model => model.enabled)
@@ -55,6 +65,8 @@ export function ModelSelector({ models }: ModelSelectorProps) {
       } catch (e) {
         console.error('Failed to parse saved model:', e)
       }
+    }else{
+      setValue(createModelId(DEFAULT_MODEL))
     }
   }, [])
 

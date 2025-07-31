@@ -6,7 +6,6 @@ import { getGuestRateLimitStatus } from '@/lib/guest/guest-mode'
 export async function GET() {
   try {
     const userId = await getCurrentUserId()
-    console.log('Current userId:', userId)
 
     // If user is authenticated, they don't have guest limitations
     if (userId !== 'anonymous') {
@@ -21,8 +20,6 @@ export async function GET() {
 
     // Get guest rate limit status for unauthenticated users
     const status = await getGuestRateLimitStatus()
-
-    console.log('Final status returned:', status)
 
     return NextResponse.json({
       isGuestMode: true,
