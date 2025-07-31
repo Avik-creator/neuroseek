@@ -1,45 +1,109 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-const GUEST_MESSAGE_COUNT_KEY = 'guest_message_count'
-const MAX_GUEST_MESSAGES = 3
+interface GuestStatus {
+  isGuestMode: boolean
+  guestMessageCount: number
+  remainingMessages: number
+  canSendMessage: boolean
+  maxMessages: number
+  windowHours?: number
+}
+
+export type DialogType = 'welcome' | 'warning' | 'limit-reached'
 
 export function useGuestMode() {
-  const [guestMessageCount, setGuestMessageCount] = useState(0)
-  const [isGuestMode, setIsGuestMode] = useState(false)
+  const [status, setStatus] = useState<GuestStatus>({
+    isGuestMode: false,
+    guestMessageCount: 0,
+    remainingMessages: 10,
+    canSendMessage: true,
+    maxMessages: 10
+  })
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogType, setDialogType] = useState<DialogType>('welcome')
+  const [hasShownWelcome, setHasShownWelcome] = useState(false)
 
-  useEffect(() => {
-    // Check if we're in guest mode (no user authentication)
-    const checkGuestMode = () => {
-      // This will be true if no user is logged in
-      setIsGuestMode(true) // We'll update this based on user prop later
-    }
-
-    // Get guest message count from cookie
-    const getGuestMessageCount = () => {
-      if (typeof document !== 'undefined') {
-        const cookies = document.cookie.split(';')
-        const countCookie = cookies.find(cookie => 
-          cookie.trim().startsWith(`${GUEST_MESSAGE_COUNT_KEY}=`)
-        )
-        if (countCookie) {
-          const count = parseInt(countCookie.split('=')[1], 10)
-          setGuestMessageCount(count || 0)
-        }
-      }
-    }
-
-    checkGuestMode()
-    getGuestMessageCount()
+  const showDialog = useCallback((type: DialogType) => {
+    setDialogType(type)
+    setDialogOpen(true)
   }, [])
 
-  const remainingMessages = MAX_GUEST_MESSAGES - guestMessageCount
-  const canSendMessage = remainingMessages > 0
+  const closeDialog = useCallback(() => {
+    setDialogOpen(false)
+  }, [])
+
+  const fetchGuestStatus = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      const response = await fetch('/api/guest-status', {
+        method: 'GET',
+        cache: 'no-store' // Ensure we get fresh data
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch guest status')
+      }
+      
+      const data = await response.json()
+      const previousStatus = status
+      setStatus(data)
+
+      // Show dialogs based on status changes
+      if (data.isGuestMode) {
+        // Show welcome dialog on first visit
+        if (!hasShownWelcome && data.remainingMessages === data.maxMessages) {
+          setHasShownWelcome(true)
+          showDialog('welcome')
+        }
+        // Show warning when approaching limit
+        else if (data.remainingMessages <= 3 && data.remainingMessages > 0 && data.canSendMessage) {
+          // Only show if we just hit this threshold
+          if (previousStatus.remainingMessages > 3 || previousStatus.remainingMessages === 0) {
+            showDialog('warning')
+          }
+        }
+        // Show limit reached dialog
+        else if (!data.canSendMessage && previousStatus.canSendMessage) {
+          showDialog('limit-reached')
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching guest status:', err)
+      setError(err instanceof Error ? err.message : 'Unknown error')
+      // Fallback to guest mode with default values
+      setStatus({
+        isGuestMode: true,
+        guestMessageCount: 0,
+        remainingMessages: 10,
+        canSendMessage: true,
+        maxMessages: 10
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchGuestStatus()
+  }, [])
+
+  // Refresh status after a chat message is sent
+  const refreshStatus = () => {
+    fetchGuestStatus()
+  }
 
   return {
-    isGuestMode,
-    guestMessageCount,
-    remainingMessages,
-    canSendMessage,
-    maxMessages: MAX_GUEST_MESSAGES
+    ...status,
+    isLoading,
+    error,
+    refreshStatus,
+    dialogOpen,
+    dialogType,
+    showDialog,
+    closeDialog
   }
 }

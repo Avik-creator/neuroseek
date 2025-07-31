@@ -10,6 +10,7 @@ import { ArrowUp, ChevronDown, MessageCirclePlus, Square } from 'lucide-react'
 
 import { Model } from '@/lib/types/models'
 import { cn } from '@/lib/utils'
+import { useGuestMode } from '@/hooks/use-guest-mode'
 
 import { useArtifact } from './artifact/artifact-context'
 import { Button } from './ui/button'
@@ -58,6 +59,7 @@ export function ChatPanel({
   const [isComposing, setIsComposing] = useState(false) // Composition state
   const [enterDisabled, setEnterDisabled] = useState(false) // Disable Enter after composition ends
   const { close: closeArtifact } = useArtifact()
+  const { isGuestMode, canSendMessage, remainingMessages, guestMessageCount, maxMessages } = useGuestMode()
 
   const handleCompositionStart = () => setIsComposing(true)
 
@@ -126,10 +128,26 @@ export function ChatPanel({
           <p className="text-center text-3xl font-semibold">
             How can I help you today?
           </p>
-          {/* Removed guest mode limitations - full access for everyone */}
+          {isGuestMode && (
+            <div className="text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Guest mode: {remainingMessages} of {maxMessages} messages remaining
+              </p>
+              {remainingMessages <= 3 && remainingMessages > 0 && (
+                <p className="text-sm text-amber-600 dark:text-amber-400">
+                  Sign up to continue chatting after {remainingMessages} more messages
+                </p>
+              )}
+              {!canSendMessage && (
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  Message limit reached. Sign up to continue chatting.
+                </p>
+              )}
+            </div>
+          )}
         </div>
       )}
-      {user || true ? (
+      {(user || canSendMessage) ? (
         <form
           onSubmit={handleSubmit}
           className={cn('max-w-3xl w-full mx-auto relative')}

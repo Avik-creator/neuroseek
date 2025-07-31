@@ -11,9 +11,11 @@ import { toast } from 'sonner'
 import { CHAT_ID } from '@/lib/constants'
 import { Model } from '@/lib/types/models'
 import { cn } from '@/lib/utils'
+import { useGuestMode } from '@/hooks/use-guest-mode'
 
 import { ChatMessages } from './chat-messages'
 import { ChatPanel } from './chat-panel'
+import { GuestLimitDialog } from './guest-limit-dialog'
 
 // Define section structure
 interface ChatSection {
@@ -37,6 +39,16 @@ export function Chat({
 }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)
+  const { 
+    isGuestMode, 
+    refreshStatus, 
+    dialogOpen, 
+    dialogType, 
+    closeDialog,
+    remainingMessages,
+    maxMessages,
+    canSendMessage 
+  } = useGuestMode()
 
   const {
     messages,
@@ -60,6 +72,11 @@ export function Chat({
     onFinish: () => {
       window.history.replaceState({}, '', `/search/${id}`)
       window.dispatchEvent(new CustomEvent('chat-history-updated'))
+      
+      // Refresh guest status after message completion for guest users
+      if (isGuestMode) {
+        refreshStatus()
+      }
     },
     onError: error => {
       toast.error(`Error in chat: ${error.message}`)
@@ -210,7 +227,7 @@ export function Chat({
       className={cn(
         'relative flex h-full min-w-0 flex-1 flex-col',
         messages.length === 0 ? 'items-center justify-center' : ''
-      )}
+      )}  
       data-testid="full-chat"
     >
       <ChatMessages
@@ -239,6 +256,16 @@ export function Chat({
         showScrollToBottomButton={!isAtBottom}
         scrollContainerRef={scrollContainerRef}
         user={user}
+      />
+      
+      {/* Guest Limit Dialog */}
+      <GuestLimitDialog
+        isOpen={dialogOpen}
+        onClose={closeDialog}
+        remainingMessages={remainingMessages}
+        maxMessages={maxMessages}
+        canSendMessage={canSendMessage}
+        type={dialogType}
       />
     </div>
   )

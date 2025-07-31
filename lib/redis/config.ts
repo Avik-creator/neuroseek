@@ -46,6 +46,30 @@ export class RedisWrapper {
     return result
   }
 
+  async get(key: string): Promise<string | null> {
+    if (this.client instanceof Redis) {
+      return this.client.get(key)
+    } else {
+      return (this.client as RedisClientType).get(key)
+    }
+  }
+
+  async incr(key: string): Promise<number> {
+    if (this.client instanceof Redis) {
+      return this.client.incr(key)
+    } else {
+      return (this.client as RedisClientType).incr(key)
+    }
+  }
+
+  async expire(key: string, seconds: number): Promise<boolean | number> {
+    if (this.client instanceof Redis) {
+      return this.client.expire(key, seconds)
+    } else {
+      return (this.client as RedisClientType).expire(key, seconds)
+    }
+  }
+
   async hgetall<T extends Record<string, unknown>>(
     key: string
   ): Promise<T | null> {
@@ -145,6 +169,16 @@ class UpstashPipelineWrapper {
     return this
   }
 
+  incr(key: string) {
+    this.pipeline.incr(key)
+    return this
+  }
+
+  expire(key: string, seconds: number) {
+    this.pipeline.expire(key, seconds)
+    return this
+  }
+
   async exec() {
     try {
       return await this.pipeline.exec()
@@ -188,6 +222,16 @@ class LocalPipelineWrapper {
 
   zadd(key: string, score: number, member: string) {
     this.pipeline.zAdd(key, { score, value: member })
+    return this
+  }
+
+  incr(key: string) {
+    this.pipeline.incr(key)
+    return this
+  }
+
+  expire(key: string, seconds: number) {
+    this.pipeline.expire(key, seconds)
     return this
   }
 
