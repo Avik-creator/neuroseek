@@ -21,6 +21,13 @@ export async function GET(request: NextRequest) {
 
   const userId = await getCurrentUserId()
 
+  if (!userId) {
+    return NextResponse.json<ChatPageResponse>(
+      { chats: [], nextOffset: null },
+      { status: 401 }
+    )
+  }
+
   try {
     const result = await getChatsPage(userId, limit, offset)
     return NextResponse.json<ChatPageResponse>(result)

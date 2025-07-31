@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation'
 
 import { getChat } from '@/lib/actions/chat'
-import { getCurrentUserId } from '@/lib/auth/get-current-user'
+import { getCurrentUser, getCurrentUserId } from '@/lib/auth/get-current-user'
 import { getModels } from '@/lib/config/models'
 import { ExtendedCoreMessage, SearchResults } from '@/lib/types' // Added SearchResults
 import { convertToUIMessages } from '@/lib/utils'
@@ -15,7 +15,7 @@ export async function generateMetadata(props: {
 }) {
   const { id } = await props.params
   const userId = await getCurrentUserId()
-  const chat = await getChat(id, userId || 'anonymous') // Ensure fallback for userId
+  const chat = userId ? await getChat(id, userId) : null
 
   let metadata: {
     title: string
@@ -60,7 +60,12 @@ export default async function SearchPage(props: {
   params: Promise<{ id: string }>
 }) {
   const userId = await getCurrentUserId()
+  const user = await getCurrentUser()
   const { id } = await props.params
+
+  if (!userId) {
+    redirect('/auth/login')
+  }
 
   const chat = await getChat(id, userId)
   // convertToUIMessages for useChat hook
@@ -70,10 +75,10 @@ export default async function SearchPage(props: {
     redirect('/')
   }
 
-  if (chat?.userId !== userId && chat?.userId !== 'anonymous') {
+  if (chat?.userId !== userId) {
     notFound()
   }
 
   const models = await getModels()
-  return <Chat id={id} savedMessages={messages} models={models} />
+  return <Chat id={id} savedMessages={messages} models={models} user={user} />
 }

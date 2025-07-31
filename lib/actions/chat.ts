@@ -119,7 +119,7 @@ export async function getChatsPage(
   }
 }
 
-export async function getChat(id: string, userId: string = 'anonymous') {
+export async function getChat(id: string, userId: string) {
   const redis = await getRedis()
   const chat = await redis.hgetall<Chat>(`chat:${id}`)
 
@@ -145,7 +145,7 @@ export async function getChat(id: string, userId: string = 'anonymous') {
 }
 
 export async function clearChats(
-  userId: string = 'anonymous'
+  userId: string
 ): Promise<{ error?: string }> {
   const redis = await getRedis()
   const userChatKey = getUserChatKey(userId)
@@ -168,7 +168,7 @@ export async function clearChats(
 
 export async function deleteChat(
   chatId: string,
-  userId = 'anonymous'
+  userId: string
 ): Promise<{ error?: string }> {
   try {
     const redis = await getRedis()
@@ -202,7 +202,7 @@ export async function deleteChat(
   }
 }
 
-export async function saveChat(chat: Chat, userId: string = 'anonymous') {
+export async function saveChat(chat: Chat, userId: string) {
   try {
     const redis = await getRedis()
     const pipeline = redis.pipeline()
@@ -234,7 +234,7 @@ export async function getSharedChat(id: string) {
   return chat
 }
 
-export async function shareChat(id: string, userId: string = 'anonymous') {
+export async function shareChat(id: string, userId: string) {
   const redis = await getRedis()
   const chat = await redis.hgetall<Chat>(`chat:${id}`)
 

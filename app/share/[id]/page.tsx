@@ -37,6 +37,7 @@ export default async function SharePage(props: {
       id={chat.id}
       savedMessages={convertToUIMessages(chat.messages)}
       models={models}
+      user={null}
     />
   )
 }

@@ -22,6 +22,13 @@ export async function DELETE(
 
   const userId = await getCurrentUserId()
 
+  if (!userId) {
+    return NextResponse.json(
+      { error: 'Authentication required' },
+      { status: 401 }
+    )
+  }
+
   try {
     const result = await deleteChat(chatId, userId)
 

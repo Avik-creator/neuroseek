@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { ChatRequestOptions } from 'ai'
 import { Message } from 'ai/react'
+import { User } from '@supabase/supabase-js'
 import { toast } from 'sonner'
 
 import { CHAT_ID } from '@/lib/constants'
@@ -25,12 +26,14 @@ export function Chat({
   id,
   savedMessages = [],
   query,
-  models
+  models,
+  user
 }: {
   id: string
   savedMessages?: Message[]
   query?: string
   models?: Model[]
+  user?: User | null
 }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)
@@ -234,6 +237,7 @@ export function Chat({
         models={models}
         showScrollToBottomButton={!isAtBottom}
         scrollContainerRef={scrollContainerRef}
+        user={user}
       />
     </div>
   )

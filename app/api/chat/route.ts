@@ -31,6 +31,13 @@ export async function POST(req: Request) {
       })
     }
 
+    if (!userId) {
+      return new Response('Authentication required to use chat', {
+        status: 401,
+        statusText: 'Unauthorized'
+      })
+    }
+
     const cookieStore = await cookies()
     const modelJson = cookieStore.get('selectedModel')?.value
     const searchMode = cookieStore.get('search-mode')?.value === 'true'
