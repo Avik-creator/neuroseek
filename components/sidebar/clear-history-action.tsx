@@ -6,6 +6,7 @@ import { MoreHorizontal, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { clearChats } from '@/lib/actions/chat'
+import { useCurrentUserId } from '@/hooks/use-current-user-id'
 
 import {
   AlertDialog,
@@ -34,10 +35,16 @@ interface ClearHistoryActionProps {
 export function ClearHistoryAction({ empty }: ClearHistoryActionProps) {
   const [isPending, start] = useTransition()
   const [open, setOpen] = useState(false)
+  const userId = useCurrentUserId()
 
   const onClear = () =>
     start(async () => {
-      const res = await clearChats()
+      if (!userId) {
+        toast.error('Please sign in to clear history')
+        return
+      }
+      
+      const res = await clearChats(userId)
       res?.error ? toast.error(res.error) : toast.success('History cleared')
       setOpen(false)
       window.dispatchEvent(new CustomEvent('chat-history-updated'))

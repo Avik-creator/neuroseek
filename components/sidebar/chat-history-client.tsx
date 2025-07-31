@@ -1,11 +1,14 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 
+import { User } from '@supabase/supabase-js'
 import { toast } from 'sonner'
 
 import { Chat } from '@/lib/types'
 
+import { Button } from '@/components/ui/button'
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,15 +19,17 @@ import { ChatHistorySkeleton } from './chat-history-skeleton'
 import { ChatMenuItem } from './chat-menu-item'
 import { ClearHistoryAction } from './clear-history-action'
 
-// interface ChatHistoryClientProps {} // Removed empty interface
+interface ChatHistoryClientProps {
+  user?: User | null
+}
 
 interface ChatPageResponse {
   chats: Chat[]
   nextOffset: number | null
 }
 
-export function ChatHistoryClient() {
-  // Removed props from function signature
+export function ChatHistoryClient({ user }: ChatHistoryClientProps) {
+  const router = useRouter()
   const [chats, setChats] = useState<Chat[]>([])
   const [nextOffset, setNextOffset] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -32,6 +37,11 @@ export function ChatHistoryClient() {
   const [isPending, startTransition] = useTransition()
 
   const fetchInitialChats = useCallback(async () => {
+    if (!user) {
+      setIsLoading(false)
+      return
+    }
+    
     setIsLoading(true)
     try {
       const response = await fetch(`/api/chats?offset=0&limit=20`)
@@ -50,7 +60,7 @@ export function ChatHistoryClient() {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     fetchInitialChats()
@@ -69,7 +79,7 @@ export function ChatHistoryClient() {
   }, [fetchInitialChats])
 
   const fetchMoreChats = useCallback(async () => {
-    if (isLoading || nextOffset === null) return
+    if (!user || isLoading || nextOffset === null) return
 
     setIsLoading(true)
     try {
@@ -89,7 +99,7 @@ export function ChatHistoryClient() {
     } finally {
       setIsLoading(false)
     }
-  }, [nextOffset, isLoading])
+  }, [user, nextOffset, isLoading])
 
   useEffect(() => {
     const observerRefValue = loadMoreRef.current
@@ -114,6 +124,33 @@ export function ChatHistoryClient() {
   }, [fetchMoreChats, nextOffset, isLoading, isPending])
 
   const isHistoryEmpty = !isLoading && !chats.length && nextOffset === null
+
+  if (!user) {
+    return (
+      <div className="flex flex-col flex-1 h-full">
+        <SidebarGroup>
+          <div className="flex items-center justify-between w-full">
+            <SidebarGroupLabel className="p-0">History</SidebarGroupLabel>
+          </div>
+        </SidebarGroup>
+        <div className="flex-1 overflow-y-auto mb-2 relative px-2 py-4">
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground mb-3">
+              Sign in to view your chat history
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.push('/auth/login')}
+              className="w-full"
+            >
+              Sign In
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col flex-1 h-full">

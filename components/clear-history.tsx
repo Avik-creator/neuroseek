@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 import { clearChats } from '@/lib/actions/chat'
+import { useCurrentUserId } from '@/hooks/use-current-user-id'
 
 import {
   AlertDialog,
@@ -28,6 +29,7 @@ type ClearHistoryProps = {
 export function ClearHistory({ empty }: ClearHistoryProps) {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const userId = useCurrentUserId()
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
@@ -50,7 +52,12 @@ export function ClearHistory({ empty }: ClearHistoryProps) {
             onClick={event => {
               event.preventDefault()
               startTransition(async () => {
-                const result = await clearChats()
+                if (!userId) {
+                  toast.error('Please sign in to clear history')
+                  return
+                }
+                
+                const result = await clearChats(userId)
                 if (result?.error) {
                   toast.error(result.error)
                 } else {

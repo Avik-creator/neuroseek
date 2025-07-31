@@ -1,3 +1,5 @@
+import { getCurrentUser } from '@/lib/auth/get-current-user'
+
 import { ChatHistoryClient } from './chat-history-client'
 
 export async function ChatHistorySection() {
@@ -6,5 +8,6 @@ export async function ChatHistorySection() {
     return null
   }
 
-  return <ChatHistoryClient />
+  const user = await getCurrentUser()
+  return <ChatHistoryClient user={user} />
 }
