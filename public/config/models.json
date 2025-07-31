@@ -60,7 +60,7 @@
       "toolCallType": "native"
     },
     {
-      "id": "openai/gpt-4.0",
+      "id": "openai/gpt-4o",
       "name": "GPT-4o",
       "provider": "GitHub Models",
       "providerId": "github-models",
