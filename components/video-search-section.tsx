@@ -34,6 +34,7 @@ export function VideoSearchSection({
     tool.state === 'result' ? tool.result : undefined
   const query = tool.args?.query as string | undefined
 
+
   const { open } = useArtifact()
   const header = (
     <button
@@ -59,7 +60,7 @@ export function VideoSearchSection({
     >
       {!isLoading && videoResults ? (
         <Section title="Videos">
-          <VideoSearchResults results={videoResults} />
+          <VideoSearchResults results={videoResults.results} />
         </Section>
       ) : (
         <DefaultSkeleton />

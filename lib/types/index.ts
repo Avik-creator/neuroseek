@@ -21,13 +21,28 @@ export type ExaSearchResults = {
   results: ExaSearchResultItem[]
 }
 
+export interface VideoResult {
+  videoId: string
+  url: string
+  publishedDate?: string
+  details?: any
+  captions?: string
+  timestamps?: string[]
+  summary?: string
+  title?: string
+  text?: string
+  image?: string
+  author?: string
+}
+
 export type SerperSearchResults = {
-  searchParameters: {
+  searchParameters?: {
     q: string
     type: string
     engine: string
   }
-  videos: SerperSearchResultItem[]
+  results: VideoResult[]
+  videos?: SerperSearchResultItem[]
 }
 
 export type SearchResultItem = {
@@ -55,6 +70,9 @@ export type SerperSearchResultItem = {
   channel: string
   date: string
   position: number
+  timestamps?: string[]
+  captions?: string
+  summary?: string
 }
 
 export interface Chat extends Record<string, any> {

@@ -37,6 +37,10 @@ export const registry = createProviderRegistry({
     apiKey: process.env.OPENAI_COMPATIBLE_API_KEY,
     baseURL: process.env.OPENAI_COMPATIBLE_API_BASE_URL
   }),
+  'github-models': createOpenAI({
+    apiKey: process.env.GITHUB_MODELS_API_KEY,
+    baseURL: process.env.GITHUB_MODELS_API_BASE_URL
+  }),
   xai
 })
 
@@ -114,6 +118,8 @@ export function isProviderEnabled(providerId: string): boolean {
         !!process.env.OPENAI_COMPATIBLE_API_KEY &&
         !!process.env.OPENAI_COMPATIBLE_API_BASE_URL
       )
+    case 'github-models':
+      return !!process.env.GITHUB_MODELS_API_KEY && !!process.env.GITHUB_MODELS_API_BASE_URL
     default:
       return false
   }
@@ -138,7 +144,7 @@ export function getToolCallModel(model?: string) {
     case 'google':
       return getModel('google:gemini-2.0-flash')
     default:
-      return getModel('openai:gpt-4o-mini')
+      return getModel('github-models:openai/gpt-4.1-nano')
   }
 }
 

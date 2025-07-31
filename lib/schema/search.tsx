@@ -5,27 +5,23 @@ export const searchSchema = z.object({
   query: z.string().describe('The query to search for'),
   max_results: z
     .number()
-    .optional()
     .describe('The maximum number of results to return. default is 20'),
   search_depth: z
     .string()
-    .optional()
     .describe(
       'The depth of the search. Allowed values are "basic" or "advanced"'
     ),
   include_domains: z
     .array(z.string())
-    .optional()
     .describe(
       'A list of domains to specifically include in the search results. Default is None, which includes all domains.'
     ),
   exclude_domains: z
     .array(z.string())
-    .optional()
     .describe(
       "A list of domains to specifically exclude from the search results. Default is None, which doesn't exclude any domains."
     )
-})
+}).strict()
 
 // Strict schema with all fields required
 export const strictSearchSchema = z.object({
@@ -46,7 +42,7 @@ export const strictSearchSchema = z.object({
     .describe(
       "A list of domains to specifically exclude from the search results. Default is None, which doesn't exclude any domains."
     )
-})
+}).strict()
 
 /**
  * Returns the appropriate search schema based on the full model name.
@@ -54,6 +50,12 @@ export const strictSearchSchema = z.object({
  */
 export function getSearchSchemaForModel(fullModel: string) {
   const [provider, modelName] = fullModel?.split(':') ?? []
+
+  // Check if this is a GitHub Models provider by looking at the provider
+  if (provider === 'github-models') {
+    return searchSchema
+  }
+  
   const useStrictSchema =
     (provider === 'openai' || provider === 'azure') &&
     modelName?.startsWith('o')
