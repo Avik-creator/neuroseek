@@ -13,7 +13,7 @@ const externalLinks = [
   },
   {
     name: 'Discord',
-    href: 'https://discord.gg/zRxaseCuGq',
+    href: 'https://discord.com/users/call7062',
     icon: <SiDiscord className="mr-2 h-4 w-4" />
   },
   {
