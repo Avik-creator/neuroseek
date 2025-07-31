@@ -5,7 +5,7 @@ import { getGuestRateLimitStatus } from '@/lib/guest/guest-mode'
 export async function GET() {
   try {
     const userId = await getCurrentUserId()
-    
+
     // If user is authenticated, they don't have guest limitations
     if (userId !== 'anonymous') {
       return NextResponse.json({
@@ -16,12 +16,12 @@ export async function GET() {
         maxMessages: Infinity
       })
     }
-    
+
     // Get guest rate limit status for unauthenticated users
     const status = await getGuestRateLimitStatus()
 
     console.log('status', status)
-    
+
     return NextResponse.json({
       isGuestMode: true,
       guestMessageCount: status.count,

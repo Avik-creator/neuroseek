@@ -34,7 +34,6 @@ export function VideoSearchSection({
     tool.state === 'result' ? tool.result : undefined
   const query = tool.args?.query as string | undefined
 
-
   const { open } = useArtifact()
   const header = (
     <button

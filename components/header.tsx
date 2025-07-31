@@ -19,10 +19,14 @@ interface HeaderProps {
   showGuestStatus?: boolean
 }
 
-export const Header: React.FC<HeaderProps> = ({ user, showGuestStatus = false }) => {
+export const Header: React.FC<HeaderProps> = ({
+  user,
+  showGuestStatus = false
+}) => {
   const { open } = useSidebar()
-  const { isGuestMode, remainingMessages, maxMessages, canSendMessage } = useGuestMode()
-  
+  const { isGuestMode, remainingMessages, maxMessages, canSendMessage } =
+    useGuestMode()
+
   return (
     <header
       className={cn(

@@ -37,12 +37,12 @@ export function ChatHistoryClient({ user }: ChatHistoryClientProps) {
   const [isPending, startTransition] = useTransition()
 
   const fetchInitialChats = useCallback(async () => {
-    // Allow chat history access without authentication 
+    // Allow chat history access without authentication
     // if (!user) {
     //   setIsLoading(false)
     //   return
     // }
-    
+
     setIsLoading(true)
     try {
       const response = await fetch(`/api/chats?offset=0&limit=20`)

@@ -40,7 +40,7 @@ export function ChatShare({ chatId, className }: ChatShareProps) {
       toast.error('Please sign in to share chats')
       return
     }
-    
+
     startTransition(() => {
       setOpen(true)
     })

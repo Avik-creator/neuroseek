@@ -4,10 +4,7 @@ import { Redis } from '@upstash/redis'
 import Exa from 'exa-js'
 import { createClient } from 'redis'
 
-import {
-  SearchResultItem,
-  SearchResults
-} from '@/lib/types'
+import { SearchResultItem, SearchResults } from '@/lib/types'
 
 /**
  * Maximum number of results to fetch from EXA.
@@ -180,7 +177,7 @@ async function advancedExaSearch(
 
   try {
     const exa = new Exa(apiKey)
-    
+
     // Configure EXA search options based on depth
     const searchOptions: any = {
       numResults: maxResults,
@@ -212,32 +209,36 @@ async function advancedExaSearch(
       }
     }
 
-    console.log(`EXA Search - Query: ${query}, Depth: ${searchDepth}, Results: ${maxResults}`)
-    
+    console.log(
+      `EXA Search - Query: ${query}, Depth: ${searchDepth}, Results: ${maxResults}`
+    )
+
     const searchResult = await exa.searchAndContents(query, searchOptions)
 
     console.log(`EXA returned ${searchResult.results.length} results`)
 
     // Transform EXA results to our SearchResults format
-    const results: SearchResultItem[] = searchResult.results.map((result: any) => {
-      let content = ''
-      
-      // Use highlights if available, otherwise fall back to text or summary
-      if (result.highlights && result.highlights.length > 0) {
-        content = result.highlights.join(' ... ')
-      } else if (result.text) {
-        // For advanced search, use full text but limit it
-        content = result.text.substring(0, 2000)
-      } else if (result.summary) {
-        content = result.summary
-      }
+    const results: SearchResultItem[] = searchResult.results.map(
+      (result: any) => {
+        let content = ''
 
-      return {
-        title: result.title || '',
-        url: result.url || '',
-        content: content || 'No content available'
+        // Use highlights if available, otherwise fall back to text or summary
+        if (result.highlights && result.highlights.length > 0) {
+          content = result.highlights.join(' ... ')
+        } else if (result.text) {
+          // For advanced search, use full text but limit it
+          content = result.text.substring(0, 2000)
+        } else if (result.summary) {
+          content = result.summary
+        }
+
+        return {
+          title: result.title || '',
+          url: result.url || '',
+          content: content || 'No content available'
+        }
       }
-    })
+    )
 
     // For advanced search, apply additional relevance scoring and filtering
     let finalResults = results
@@ -270,7 +271,10 @@ async function advancedExaSearch(
   }
 }
 
-function calculateRelevanceScore(result: SearchResultItem, query: string): number {
+function calculateRelevanceScore(
+  result: SearchResultItem,
+  query: string
+): number {
   try {
     const lowercaseContent = result.content.toLowerCase()
     const lowercaseQuery = query.toLowerCase()

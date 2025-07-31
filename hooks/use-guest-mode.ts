@@ -38,16 +38,16 @@ export function useGuestMode() {
     try {
       setIsLoading(true)
       setError(null)
-      
+
       const response = await fetch('/api/guest-status', {
         method: 'GET',
         cache: 'no-store' // Ensure we get fresh data
       })
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch guest status')
       }
-      
+
       const data = await response.json()
       const previousStatus = status
       setStatus(data)
@@ -60,9 +60,16 @@ export function useGuestMode() {
           showDialog('welcome')
         }
         // Show warning when approaching limit
-        else if (data.remainingMessages <= 3 && data.remainingMessages > 0 && data.canSendMessage) {
+        else if (
+          data.remainingMessages <= 3 &&
+          data.remainingMessages > 0 &&
+          data.canSendMessage
+        ) {
           // Only show if we just hit this threshold
-          if (previousStatus.remainingMessages > 3 || previousStatus.remainingMessages === 0) {
+          if (
+            previousStatus.remainingMessages > 3 ||
+            previousStatus.remainingMessages === 0
+          ) {
             showDialog('warning')
           }
         }

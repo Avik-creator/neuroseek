@@ -28,25 +28,29 @@ export function VideoSearchResults({ results }: VideoSearchResultsProps) {
     return <div className="text-muted-foreground">No videos found</div>
   }
 
-  const videos = results.filter((video) => {
-    try {
-      const url = new URL(video.url)
-      return url.hostname.includes('youtube.com') && url.pathname === '/watch'
-    } catch (e) {
-      console.error('Invalid video URL:', video.url)
-      return false
-    }
-  }).map(video => ({
-    title: video.title || video.videoId,
-    link: video.url,
-    snippet: video.text?.split('|')[0].trim() || '',
-    imageUrl: video.image || `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
-    duration: '',
-    source: 'YouTube',
-    channel: video.author || '',
-    date: video.publishedDate || '',
-    position: 0
-  }))
+  const videos = results
+    .filter(video => {
+      try {
+        const url = new URL(video.url)
+        return url.hostname.includes('youtube.com') && url.pathname === '/watch'
+      } catch (e) {
+        console.error('Invalid video URL:', video.url)
+        return false
+      }
+    })
+    .map(video => ({
+      title: video.title || video.videoId,
+      link: video.url,
+      snippet: video.text?.split('|')[0].trim() || '',
+      imageUrl:
+        video.image ||
+        `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
+      duration: '',
+      source: 'YouTube',
+      channel: video.author || '',
+      date: video.publishedDate || '',
+      position: 0
+    }))
 
   const query = ''
 

@@ -39,15 +39,15 @@ export function Chat({
 }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)
-  const { 
-    isGuestMode, 
-    refreshStatus, 
-    dialogOpen, 
-    dialogType, 
+  const {
+    isGuestMode,
+    refreshStatus,
+    dialogOpen,
+    dialogType,
     closeDialog,
     remainingMessages,
     maxMessages,
-    canSendMessage 
+    canSendMessage
   } = useGuestMode()
 
   const {
@@ -72,7 +72,7 @@ export function Chat({
     onFinish: () => {
       window.history.replaceState({}, '', `/search/${id}`)
       window.dispatchEvent(new CustomEvent('chat-history-updated'))
-      
+
       // Refresh guest status after message completion for guest users
       if (isGuestMode) {
         refreshStatus()
@@ -227,7 +227,7 @@ export function Chat({
       className={cn(
         'relative flex h-full min-w-0 flex-1 flex-col',
         messages.length === 0 ? 'items-center justify-center' : ''
-      )}  
+      )}
       data-testid="full-chat"
     >
       <ChatMessages
@@ -257,7 +257,7 @@ export function Chat({
         scrollContainerRef={scrollContainerRef}
         user={user}
       />
-      
+
       {/* Guest Limit Dialog */}
       <GuestLimitDialog
         isOpen={dialogOpen}

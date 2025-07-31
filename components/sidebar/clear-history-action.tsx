@@ -44,7 +44,7 @@ export function ClearHistoryAction({ empty }: ClearHistoryActionProps) {
         toast.error('Please sign in to clear history')
         return
       }
-      
+
       const res = await clearChats(userId)
       res?.error ? toast.error(res.error) : toast.success('History cleared')
       setOpen(false)

@@ -144,9 +144,7 @@ export async function getChat(id: string, userId?: string | null) {
   return chat
 }
 
-export async function clearChats(
-  userId: string
-): Promise<{ error?: string }> {
+export async function clearChats(userId: string): Promise<{ error?: string }> {
   const redis = await getRedis()
   const userChatKey = getUserChatKey(userId)
   const chats = await redis.zrange(userChatKey, 0, -1)
@@ -213,7 +211,7 @@ export async function saveChat(chat: Chat, userId?: string | null) {
     }
 
     pipeline.hmset(`chat:${chat.id}`, chatToSave)
-    
+
     // Only add to user's chat history if userId is provided
     if (userId) {
       pipeline.zadd(getUserChatKey(userId), Date.now(), `chat:${chat.id}`)

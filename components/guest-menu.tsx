@@ -28,7 +28,8 @@ import { ExternalLinkItems } from './external-link-items'
 import { ThemeMenuItems } from './theme-menu-items'
 
 export default function GuestMenu() {
-  const { isGuestMode, remainingMessages, maxMessages, canSendMessage } = useGuestMode()
+  const { isGuestMode, remainingMessages, maxMessages, canSendMessage } =
+    useGuestMode()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

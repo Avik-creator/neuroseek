@@ -17,6 +17,7 @@ GITHUB_MODELS_API_BASE_URL=https://models.github.ai/inference
 The following models are available through GitHub Models:
 
 ### OpenAI Models
+
 - `openai/gpt-4o` - GPT-4o
 - `openai/gpt-4o-mini` - GPT-4o mini
 - `openai/gpt-4-turbo` - GPT-4 Turbo
@@ -46,4 +47,4 @@ If you encounter issues:
 
 ## API Reference
 
-GitHub Models uses the same API format as OpenAI, so it's compatible with the AI SDK's OpenAI provider. 
+GitHub Models uses the same API format as OpenAI, so it's compatible with the AI SDK's OpenAI provider.

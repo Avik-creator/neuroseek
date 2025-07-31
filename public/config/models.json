@@ -17,7 +17,7 @@
       "toolCallType": "manual",
       "toolCallModel": "gemini-2.0-flash"
     },
-    
+
     {
       "id": "deepseek-r1-distill-llama-70b",
       "name": "DeepSeek R1 Distill Llama 70B",
@@ -83,6 +83,5 @@
       "enabled": true,
       "toolCallType": "native"
     }
-    
   ]
 }

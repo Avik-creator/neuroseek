@@ -10,7 +10,6 @@ import { Spinner } from './ui/spinner'
 import { RenderMessage } from './render-message'
 import { ToolSection } from './tool-section'
 
-
 // Import section structure interface
 interface ChatSection {
   id: string

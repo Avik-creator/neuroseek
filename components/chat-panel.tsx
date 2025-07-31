@@ -59,7 +59,13 @@ export function ChatPanel({
   const [isComposing, setIsComposing] = useState(false) // Composition state
   const [enterDisabled, setEnterDisabled] = useState(false) // Disable Enter after composition ends
   const { close: closeArtifact } = useArtifact()
-  const { isGuestMode, canSendMessage, remainingMessages, guestMessageCount, maxMessages } = useGuestMode()
+  const {
+    isGuestMode,
+    canSendMessage,
+    remainingMessages,
+    guestMessageCount,
+    maxMessages
+  } = useGuestMode()
 
   const handleCompositionStart = () => setIsComposing(true)
 
@@ -131,11 +137,13 @@ export function ChatPanel({
           {isGuestMode && (
             <div className="text-center space-y-2">
               <p className="text-sm text-muted-foreground">
-                Guest mode: {remainingMessages} of {maxMessages} messages remaining
+                Guest mode: {remainingMessages} of {maxMessages} messages
+                remaining
               </p>
               {remainingMessages <= 3 && remainingMessages > 0 && (
                 <p className="text-sm text-amber-600 dark:text-amber-400">
-                  Sign up to continue chatting after {remainingMessages} more messages
+                  Sign up to continue chatting after {remainingMessages} more
+                  messages
                 </p>
               )}
               {!canSendMessage && (
@@ -147,7 +155,7 @@ export function ChatPanel({
           )}
         </div>
       )}
-      {(user || canSendMessage) ? (
+      {user || canSendMessage ? (
         <form
           onSubmit={handleSubmit}
           className={cn('max-w-3xl w-full mx-auto relative')}

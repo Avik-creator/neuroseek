@@ -119,7 +119,10 @@ export function isProviderEnabled(providerId: string): boolean {
         !!process.env.OPENAI_COMPATIBLE_API_BASE_URL
       )
     case 'github-models':
-      return !!process.env.GITHUB_MODELS_API_KEY && !!process.env.GITHUB_MODELS_API_BASE_URL
+      return (
+        !!process.env.GITHUB_MODELS_API_KEY &&
+        !!process.env.GITHUB_MODELS_API_BASE_URL
+      )
     default:
       return false
   }

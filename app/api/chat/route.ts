@@ -1,7 +1,10 @@
 import { cookies } from 'next/headers'
 
 import { getCurrentUserId } from '@/lib/auth/get-current-user'
-import { canSendGuestMessage, incrementGuestMessageCount } from '@/lib/guest/guest-mode'
+import {
+  canSendGuestMessage,
+  incrementGuestMessageCount
+} from '@/lib/guest/guest-mode'
 import { createManualToolStreamResponse } from '@/lib/streaming/create-manual-tool-stream'
 import { createToolCallingStreamResponse } from '@/lib/streaming/create-tool-calling-stream'
 import { Model } from '@/lib/types/models'
@@ -31,22 +34,23 @@ export async function POST(req: Request) {
       })
     }
     const userId = await getCurrentUserId()
-    
+
     // Check rate limits for guest users (users without authentication)
     if (userId === 'anonymous') {
       const canSend = await canSendGuestMessage()
       if (!canSend) {
-        return new Response('Guest message limit exceeded. Please sign up to continue chatting.', {
-          status: 429,
-          statusText: 'Too Many Requests'
-        })
+        return new Response(
+          'Guest message limit exceeded. Please sign up to continue chatting.',
+          {
+            status: 429,
+            statusText: 'Too Many Requests'
+          }
+        )
       }
-      
+
       // Increment guest message count for rate limiting
       await incrementGuestMessageCount()
     }
-
-    
 
     const cookieStore = await cookies()
     const modelJson = cookieStore.get('selectedModel')?.value

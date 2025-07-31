@@ -46,7 +46,7 @@ export function GuestLimitDialog({
             </Button>
           )
         }
-      
+
       case 'warning':
         return {
           icon: <AlertTriangle className="h-12 w-12 text-amber-500" />,
@@ -59,7 +59,7 @@ export function GuestLimitDialog({
             </Button>
           )
         }
-      
+
       case 'limit-reached':
         return {
           icon: <XCircle className="h-12 w-12 text-red-500" />,
@@ -86,15 +86,13 @@ export function GuestLimitDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            {content.icon}
-          </div>
+          <div className="flex justify-center mb-4">{content.icon}</div>
           <DialogTitle>{content.title}</DialogTitle>
           <DialogDescription className="text-center">
             {content.description}
           </DialogDescription>
         </DialogHeader>
-        
+
         <DialogFooter className="flex-col sm:flex-col gap-2">
           {content.secondaryAction}
           {content.actionText && (

@@ -39,8 +39,7 @@ export function createSearchTool(fullModel: string) {
         (process.env.SEARCH_API as SearchProviderType) || DEFAULT_PROVIDER
 
       const effectiveSearchDepthForAPI =
-        searchAPI === 'exa' &&
-        process.env.EXA_DEFAULT_DEPTH === 'advanced'
+        searchAPI === 'exa' && process.env.EXA_DEFAULT_DEPTH === 'advanced'
           ? 'advanced'
           : effectiveSearchDepth || 'basic'
 
@@ -49,10 +48,7 @@ export function createSearchTool(fullModel: string) {
       )
 
       try {
-        if (
-          searchAPI === 'exa' &&
-          effectiveSearchDepthForAPI === 'advanced'
-        ) {
+        if (searchAPI === 'exa' && effectiveSearchDepthForAPI === 'advanced') {
           // Get the base URL using the centralized utility function
           const baseUrl = await getBaseUrlString()
 
