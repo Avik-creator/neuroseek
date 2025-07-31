@@ -13,12 +13,12 @@ import { isProviderEnabled } from '@/lib/utils/registry'
 export const maxDuration = 30
 
 const DEFAULT_MODEL: Model = {
-  id: 'gpt-4o-mini',
-  name: 'GPT-4o mini',
-  provider: 'OpenAI',
-  providerId: 'openai',
+  id: 'gemini-2.0-flash',
+  name: 'Gemini 2.0 Flash',
+  provider: 'Google Generative AI',
+  providerId: 'google',
   enabled: true,
-  toolCallType: 'native'
+  toolCallType: 'manual'
 }
 
 export async function POST(req: Request) {
@@ -35,8 +35,10 @@ export async function POST(req: Request) {
     }
     const userId = await getCurrentUserId()
 
-    // Check rate limits for guest users (users without authentication)
+    // For guest users, create a unique ID based on their IP for chat history
+    let effectiveUserId = userId
     if (userId === 'anonymous') {
+      // Check rate limits for guest users
       const canSend = await canSendGuestMessage()
       if (!canSend) {
         return new Response(
@@ -50,6 +52,12 @@ export async function POST(req: Request) {
 
       // Increment guest message count for rate limiting
       await incrementGuestMessageCount()
+
+      // Create unique guest ID based on IP for chat history
+      const { getClientIP } = await import('@/lib/guest/guest-mode')
+      const clientIP = await getClientIP()
+      effectiveUserId = `guest_${clientIP}`
+      console.log('Guest chat, using effective userId:', effectiveUserId)
     }
 
     const cookieStore = await cookies()
@@ -87,14 +95,14 @@ export async function POST(req: Request) {
           model: selectedModel,
           chatId,
           searchMode,
-          userId
+          userId: effectiveUserId
         })
       : createManualToolStreamResponse({
           messages,
           model: selectedModel,
           chatId,
           searchMode,
-          userId
+          userId: effectiveUserId
         })
   } catch (error) {
     console.error('API route error:', error)

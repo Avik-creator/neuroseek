@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { getChatsPage } from '@/lib/actions/chat'
 import { getCurrentUserId } from '@/lib/auth/get-current-user'
+import { getClientIP } from '@/lib/guest/guest-mode'
 import { type Chat } from '@/lib/types'
 
 interface ChatPageResponse {
@@ -21,13 +22,16 @@ export async function GET(request: NextRequest) {
 
   const userId = await getCurrentUserId()
 
-  // For guest users, return empty chat history instead of error
-  if (!userId) {
-    return NextResponse.json<ChatPageResponse>({ chats: [], nextOffset: null })
+  // For guest users, create a unique ID based on their IP
+  let effectiveUserId = userId
+  if (userId === 'anonymous') {
+    const clientIP = await getClientIP()
+    effectiveUserId = `guest_${clientIP}`
+    console.log('Guest user detected, using effective userId:', effectiveUserId)
   }
 
   try {
-    const result = await getChatsPage(userId, limit, offset)
+    const result = await getChatsPage(effectiveUserId, limit, offset)
     return NextResponse.json<ChatPageResponse>(result)
   } catch (error) {
     console.error('API route error fetching chats:', error)
