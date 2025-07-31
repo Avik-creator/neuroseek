@@ -96,11 +96,32 @@ export function useGuestMode() {
 
   useEffect(() => {
     fetchGuestStatus()
+    
+    // Listen for guest status updates from other components
+    const handleGuestStatusUpdate = () => {
+      console.log('Guest status update event received, refreshing...')
+      fetchGuestStatus()
+    }
+    
+    if (typeof window !== 'undefined') {
+      window.addEventListener('guest-status-updated', handleGuestStatusUpdate)
+    }
+    
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('guest-status-updated', handleGuestStatusUpdate)
+      }
+    }
   }, [])
 
   // Refresh status after a chat message is sent
   const refreshStatus = () => {
+    console.log('Refreshing guest status and notifying other components...')
     fetchGuestStatus()
+    // Notify other components to refresh their status
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('guest-status-updated'))
+    }
   }
 
   return {

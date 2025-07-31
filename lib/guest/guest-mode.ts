@@ -14,21 +14,32 @@ export async function getClientIP(): Promise<string> {
   const realIP = headersList.get('x-real-ip')
   const remoteAddr = headersList.get('x-forwarded-host')
 
+  console.log('Headers debug:', {
+    'x-forwarded-for': forwardedFor,
+    'x-real-ip': realIP,
+    'x-forwarded-host': remoteAddr
+  })
+
   if (forwardedFor) {
     // x-forwarded-for can contain multiple IPs, take the first one
-    return forwardedFor.split(',')[0].trim()
+    const ip = forwardedFor.split(',')[0].trim()
+    console.log('Using x-forwarded-for IP:', ip)
+    return ip
   }
 
   if (realIP) {
+    console.log('Using x-real-ip IP:', realIP.trim())
     return realIP.trim()
   }
 
   if (remoteAddr) {
+    console.log('Using x-forwarded-host IP:', remoteAddr.trim())
     return remoteAddr.trim()
   }
 
   // Fallback - this might not be the real client IP in production
-  return 'unknown'
+  console.log('Using fallback IP: localhost')
+  return 'localhost'
 }
 
 // Helper function to create Redis key for IP
@@ -39,13 +50,21 @@ function getIPRateLimitKey(ip: string): string {
 export async function getGuestMessageCount(ip?: string): Promise<number> {
   try {
     const clientIP = ip || (await getClientIP())
+    console.log('Getting count for IP:', clientIP)
+    
     const redis = await getRedisClient()
     const key = getIPRateLimitKey(clientIP)
 
+    console.log('Redis key:', key)
     const count = await redis.get(key)
-    return count ? parseInt(count.toString(), 10) : 0
+    console.log('Redis returned count:', count, 'type:', typeof count)
+    
+    const result = count ? parseInt(count.toString(), 10) : 0
+    console.log('Final parsed count:', result)
+    return result
   } catch (error) {
     console.error('Error getting guest message count:', error)
+    console.error('Error details:', error)
     return 0
   }
 }
@@ -56,14 +75,18 @@ export async function incrementGuestMessageCount(ip?: string): Promise<number> {
     const redis = await getRedisClient()
     const key = getIPRateLimitKey(clientIP)
 
+    console.log('Incrementing count for IP:', clientIP, 'key:', key)
+    
     // Use Redis pipeline for atomic operations
     const pipeline = redis.pipeline()
     pipeline.incr(key)
     pipeline.expire(key, RATE_LIMIT_WINDOW)
 
     const results = await pipeline.exec()
+    console.log('Pipeline results:', results)
     const newCount = results?.[0] ? parseInt(results[0].toString(), 10) : 1
 
+    console.log('New count after increment:', newCount)
     return newCount
   } catch (error) {
     console.error('Error incrementing guest message count:', error)
@@ -83,12 +106,12 @@ export async function getRemainingGuestMessages(ip?: string): Promise<number> {
 
 export async function getGuestRateLimitStatus(ip?: string) {
   const count = await getGuestMessageCount(ip)
-  const remaining = getRemainingGuestMessages(ip)
+  const remaining = await getRemainingGuestMessages(ip)
   const canSend = await canSendGuestMessage(ip)
 
   return {
     count,
-    remaining: await remaining,
+    remaining,
     canSend,
     maxMessages: MAX_GUEST_MESSAGES,
     windowHours: RATE_LIMIT_WINDOW / 3600
