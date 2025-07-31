@@ -76,14 +76,6 @@
       "toolCallType": "native"
     },
     {
-      "id": "openai/gpt-4-turbo",
-      "name": "GPT-4 Turbo",
-      "provider": "GitHub Models",
-      "providerId": "github-models",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
       "id": "openai/gpt-4.1-nano",
       "name": "GPT-4.1 Nano",
       "provider": "GitHub Models",
