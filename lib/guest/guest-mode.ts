@@ -1,4 +1,5 @@
 import { headers } from 'next/headers'
+
 import { getRedisClient } from '@/lib/redis/config'
 
 const MAX_GUEST_MESSAGES = 10

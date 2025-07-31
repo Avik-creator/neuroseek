@@ -6,6 +6,7 @@ import React from 'react'
 import { User } from '@supabase/supabase-js'
 
 import { cn } from '@/lib/utils'
+
 import { useGuestMode } from '@/hooks/use-guest-mode'
 
 import { useSidebar } from '@/components/ui/sidebar'

@@ -10,6 +10,7 @@ import { ArrowUp, ChevronDown, MessageCirclePlus, Square } from 'lucide-react'
 
 import { Model } from '@/lib/types/models'
 import { cn } from '@/lib/utils'
+
 import { useGuestMode } from '@/hooks/use-guest-mode'
 
 import { useArtifact } from './artifact/artifact-context'

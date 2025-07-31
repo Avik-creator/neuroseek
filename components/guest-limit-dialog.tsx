@@ -1,9 +1,9 @@
 'use client'
 
+import { useEffect,useState } from 'react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
 
-import { MessageCircle, AlertTriangle, XCircle, User } from 'lucide-react'
+import { AlertTriangle, MessageCircle, User,XCircle } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {

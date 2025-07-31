@@ -5,12 +5,13 @@ import Link from 'next/link'
 import {
   Link2,
   LogIn,
+  MessageSquare,
   Palette,
-  Settings2, // Or EllipsisVertical, etc.
-  MessageSquare
+  Settings2// Or EllipsisVertical, etc.
 } from 'lucide-react'
 
 import { useGuestMode } from '@/hooks/use-guest-mode'
+
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
