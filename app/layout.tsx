@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter as FontSans } from 'next/font/google'
+import Script from "next/script";
 
 import { Analytics } from '@vercel/analytics/next'
 
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
-import Script from "next/script";
+
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/sonner'
 

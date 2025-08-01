@@ -18,7 +18,7 @@ const externalLinks = [
   },
   {
     name: 'GitHub',
-    href: 'https://github.com/Avik-creator',
+    href: 'https://github.com/Avik-creator/neuroseek',
     icon: <SiGithub className="mr-2 h-4 w-4" />
   }
 ]
