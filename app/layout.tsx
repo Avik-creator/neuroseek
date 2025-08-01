@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
-
+import Script from "next/script";
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -67,12 +67,20 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+          <Script
+            defer
+            data-domain="neuroseek.avikmukherjee.me"
+            src="https://webtracker.avikmukherjee.me/tracking-script.js"
+          />
+      </head>
       <body
         className={cn(
           'min-h-screen flex flex-col font-sans antialiased',
           fontSans.variable
         )}
       >
+        
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
