@@ -60,6 +60,22 @@
       "toolCallType": "native"
     },
     {
+      "id":"openai/gpt-oss-120b",
+      "name": "Open AI GPT OSS 120b",
+      "provider": "Groq",
+      "providerId": "groq",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+     {
+      "id":"openai/gpt-oss-20b",
+      "name": "Open AI GPT OSS 20b",
+      "provider": "Groq",
+      "providerId": "groq",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+    {
       "id": "openai/gpt-4o",
       "name": "GPT-4o",
       "provider": "GitHub Models",
